@@ -8,22 +8,27 @@ export default Mixin.create({
   // Overwrite to flatten the form data by removing the root
   disableRoot: false,
 
-  ajaxOptions: function(url, type, options) {
+  ajaxOptions: function (url, type, options) {
     var data;
 
-    if (options && 'data' in options) { data = options.data; }
+    if (options && 'data' in options) {
+      data = options.data;
+    }
 
     var hash = this._super.apply(this, arguments);
 
-    if (typeof FormData !== 'undefined' && data && this.formDataTypes.indexOf(type) >= 0) {
+    if (
+      typeof FormData !== 'undefined' &&
+      data &&
+      this.formDataTypes.indexOf(type) >= 0
+    ) {
       hash.processData = false;
       hash.contentType = false;
       if (typeof hash.headers !== 'undefined') {
         delete hash.headers['content-type'];
       }
-      hash.data = this._getFormData(data);
+      hash.body = this._getFormData(data);
     }
-
     return hash;
   },
 
